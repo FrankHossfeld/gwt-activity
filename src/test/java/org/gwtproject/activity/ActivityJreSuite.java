@@ -16,19 +16,15 @@
 package org.gwtproject.activity;
 
 import org.gwtproject.activity.shared.ActivityManagerTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * Tests of the activity package.
  */
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+  ActivityManagerTest.class
+})
 public class ActivityJreSuite {
-  public static Test suite() {
-    TestSuite suite = new TestSuite("Tests of the activity package");
-
-    suite.addTestSuite(ActivityManagerTest.class);
-
-    return suite;
-  }
 }
