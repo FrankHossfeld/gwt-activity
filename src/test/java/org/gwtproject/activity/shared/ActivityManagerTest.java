@@ -15,6 +15,8 @@
  */
 package org.gwtproject.activity.shared;
 
+import java.util.function.Consumer;
+
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -23,9 +25,6 @@ import com.google.gwt.event.shared.testing.CountingEventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceChangeRequestEvent;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 
 import junit.framework.TestCase;
 
@@ -39,13 +38,13 @@ public class ActivityManagerTest extends TestCase {
     }
 
     @Override
-    public void start(AcceptsOneWidget display, EventBus eventBus) {
+    public void start(Consumer<Activity.View> display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
     }
 
     void finish() {
-      display.setWidget(view);
+      display.accept(view);
     }
   }
 
@@ -66,28 +65,25 @@ public class ActivityManagerTest extends TestCase {
   private static class Handler implements EventHandler {
   };
 
-  private static class MyDisplay implements AcceptsOneWidget {
-    IsWidget widget = null;
+  private static class MyDisplay implements Consumer<Activity.View> {
+    Activity.View view = null;
 
     @Override
-    public void setWidget(IsWidget widget) {
-      this.widget = widget;
+    public void accept(Activity.View view) {
+      this.view = view;
     }
   }
 
   private static class MyPlace extends Place {
   }
 
-  private static class MyView implements IsWidget {
-    @Override
-    public Widget asWidget() {
-      return null;
-    }
+  private static class MyView implements Activity.View {
+    
   }
   private static class SyncActivity implements Activity {
     boolean canceled = false;
     boolean stopped = false;
-    AcceptsOneWidget display;
+    Consumer<Activity.View> display;
     String stopWarning;
     MyView view;
     EventBus bus;
@@ -112,10 +108,10 @@ public class ActivityManagerTest extends TestCase {
     }
 
     @Override
-    public void start(AcceptsOneWidget display, EventBus eventBus) {
+    public void start(Consumer<Activity.View> display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
-      display.setWidget(view);
+      display.accept(view);
     }
   }
 
@@ -203,26 +199,26 @@ public class ActivityManagerTest extends TestCase {
         place1);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
     assertNull(asyncActivity1.display);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
     assertNotNull(asyncActivity1.display);
 
     asyncActivity1.finish();
-    assertEquals(asyncActivity1.view, realDisplay.widget);
+    assertEquals(asyncActivity1.view, realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
 
     event = new PlaceChangeRequestEvent(place2);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertEquals(asyncActivity1.view, realDisplay.widget);
+    assertEquals(asyncActivity1.view, realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
     assertFalse(asyncActivity2.stopped);
@@ -230,7 +226,7 @@ public class ActivityManagerTest extends TestCase {
     assertNull(asyncActivity2.display);
 
     eventBus.fireEvent(new PlaceChangeEvent(place2));
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.canceled);
     assertTrue(asyncActivity1.stopped);
     assertFalse(asyncActivity2.stopped);
@@ -238,7 +234,7 @@ public class ActivityManagerTest extends TestCase {
     assertNotNull(asyncActivity2.display);
 
     asyncActivity2.finish();
-    assertEquals(asyncActivity2.view, realDisplay.widget);
+    assertEquals(asyncActivity2.view, realDisplay.view);
   }
 
   public void testCancel() {
@@ -266,13 +262,13 @@ public class ActivityManagerTest extends TestCase {
         place1);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
     assertNull(asyncActivity1.display);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
     assertNotNull(asyncActivity1.display);
@@ -280,12 +276,12 @@ public class ActivityManagerTest extends TestCase {
     event = new PlaceChangeRequestEvent(place2);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(asyncActivity1.stopped);
     assertFalse(asyncActivity1.canceled);
 
     eventBus.fireEvent(new PlaceChangeEvent(place2));
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertTrue(asyncActivity1.canceled);
     assertFalse(asyncActivity1.stopped);
     assertFalse(ayncActivity2.stopped);
@@ -293,10 +289,10 @@ public class ActivityManagerTest extends TestCase {
     assertNotNull(ayncActivity2.display);
 
     ayncActivity2.finish();
-    assertEquals(ayncActivity2.view, realDisplay.widget);
+    assertEquals(ayncActivity2.view, realDisplay.view);
 
     asyncActivity1.finish();
-    assertEquals(ayncActivity2.view, realDisplay.widget);
+    assertEquals(ayncActivity2.view, realDisplay.view);
   }
 
   public void testDropHandlersOnStop() {
@@ -306,7 +302,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(AcceptsOneWidget panel, EventBus eventBus) {
+      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(Event.TYPE, new Handler());
       }
@@ -349,7 +345,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStartAndCancel() {
     activity1 = new AsyncActivity(null) {
       @Override
-      public void start(AcceptsOneWidget panel, EventBus eventBus) {
+      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(Event.TYPE, new Handler());
       }
@@ -363,7 +359,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(AcceptsOneWidget panel, EventBus eventBus) {
+      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -396,7 +392,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStopAndStart() {
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(AcceptsOneWidget panel, EventBus eventBus) {
+      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(Event.TYPE, new Handler());
       }
@@ -410,7 +406,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(AcceptsOneWidget panel, EventBus eventBus) {
+      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -504,15 +500,15 @@ public class ActivityManagerTest extends TestCase {
         place1);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
-    assertEquals(activity1.view, realDisplay.widget);
+    assertEquals(activity1.view, realDisplay.view);
 
     event = new PlaceChangeRequestEvent(place2);
     eventBus.fireEvent(event);
     assertEquals(activity1.stopWarning, event.getWarning());
-    assertEquals(activity1.view, realDisplay.widget);
+    assertEquals(activity1.view, realDisplay.view);
     assertFalse(activity1.stopped);
     assertFalse(activity1.canceled);
   }
@@ -524,32 +520,32 @@ public class ActivityManagerTest extends TestCase {
         place1);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertNull(realDisplay.widget);
+    assertNull(realDisplay.view);
     assertFalse(activity1.stopped);
     assertFalse(activity1.canceled);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
-    assertEquals(activity1.view, realDisplay.widget);
+    assertEquals(activity1.view, realDisplay.view);
     assertFalse(activity1.stopped);
     assertFalse(activity1.canceled);
 
     event = new PlaceChangeRequestEvent(place2);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
-    assertEquals(activity1.view, realDisplay.widget);
+    assertEquals(activity1.view, realDisplay.view);
     assertFalse(activity1.stopped);
     assertFalse(activity1.canceled);
 
     eventBus.fireEvent(new PlaceChangeEvent(place2));
-    assertEquals(activity2.view, realDisplay.widget);
+    assertEquals(activity2.view, realDisplay.view);
     assertTrue(activity1.stopped);
     assertFalse(activity1.canceled);
   }
   
   /**
-   * Non-regression test: make sure an activity can call {@link AcceptsOneWidget#setWidget(IsWidget)} several times to switch views.
+   * Non-regression test: make sure an activity can call {@link Consumer<Activity.View>#accept(IsWidget)} several times to switch views.
    */
-  public void testSetWidgetSeveralTimesPerActivity() {
+  public void testacceptSeveralTimesPerActivity() {
     class TwoViewActivity extends SyncActivity {
       MyView view2;
       
@@ -559,11 +555,11 @@ public class ActivityManagerTest extends TestCase {
       }
       
       void secondView() {
-        display.setWidget(view2);
+        display.accept(view2);
       }
       
       void firstView() {
-        display.setWidget(view);
+        display.accept(view);
       }
     }
     final TwoViewActivity activity = new TwoViewActivity(new MyView(), new MyView());
@@ -581,16 +577,16 @@ public class ActivityManagerTest extends TestCase {
     // Start an activity
     manager.onPlaceChange(new PlaceChangeEvent(place1));
 
-    assertEquals(activity.view, realDisplay.widget);
+    assertEquals(activity.view, realDisplay.view);
     
-    // Call setWidget on the display several times, just to make sure it's possible
+    // Call accept on the display several times, just to make sure it's possible
     activity.secondView();
-    assertEquals(activity.view2, realDisplay.widget);
+    assertEquals(activity.view2, realDisplay.view);
 
     activity.firstView();
-    assertEquals(activity.view, realDisplay.widget);
+    assertEquals(activity.view, realDisplay.view);
 
     activity.secondView();
-    assertEquals(activity.view2, realDisplay.widget);
+    assertEquals(activity.view2, realDisplay.view);
   }
 }

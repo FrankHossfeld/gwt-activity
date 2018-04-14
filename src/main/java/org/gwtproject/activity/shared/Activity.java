@@ -15,8 +15,9 @@
  */
 package org.gwtproject.activity.shared;
 
+import java.util.function.Consumer;
+
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * Implemented by objects that control a piece of user interface, with a life
@@ -25,6 +26,16 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * navigates through the app.
  */
 public interface Activity {
+  
+  /**
+   * Marker interface for an Activity panel. It can be either a widget or an 
+   * element. When setting up the {@link ActivityManager} the display should
+   * do the proper checks & casting.
+   */
+  interface View {
+    
+  }
+  
   /**
    * Called when the user is trying to navigate away from this activity.
    *
@@ -40,24 +51,24 @@ public interface Activity {
   void onCancel();
 
   /**
-   * Called when the Activity's widget has been removed from view. All event
+   * Called when the Activity's view has been removed from container. All event
    * handlers it registered will have been removed before this method is called.
    */
   void onStop();
 
   /**
-   * Called when the Activity should ready its widget for the user. When the
-   * widget is ready (typically after an RPC response has been received),
-   * receiver should present it by calling
-   * {@link AcceptsOneWidget#setWidget} on the given panel.
+   * Called when the Activity should ready its view for the user. When the
+   * view is ready (typically after an RPC response has been received),
+   * receiver should present it by calling {@link Consumer#accept(Object)} on 
+   * the given container.
    * <p>
    * Any handlers attached to the provided event bus will be de-registered when
    * the activity is stopped, so activities will rarely need to hold on to the
    * {@link com.google.gwt.event.shared.HandlerRegistration HandlerRegistration}
    * instances returned by {@link EventBus#addHandler}.
    *
-   * @param panel the panel to display this activity's widget when it is ready
+   * @param container the container to display this activity's view when it is ready
    * @param eventBus the event bus
    */
-  void start(AcceptsOneWidget panel, EventBus eventBus);
+  void start(Consumer<View> container, EventBus eventBus);
 }

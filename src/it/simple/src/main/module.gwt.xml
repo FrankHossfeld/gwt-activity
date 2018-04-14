@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "GWT 2.8.2" "http://www.gwtproject.org/doctype/2.8.2/gwt-module.dtd">
+<module>
+  <!-- Inherit the core Web Toolkit stuff. -->
+  <inherits name='com.google.gwt.user.User' />
+  
+  <inherits name='elemental2.dom.Dom' />
+  <inherits name='org.gwtproject.activity.Activity' />
+
+  <!-- Inherit the default GWT style sheet. -->
+  <inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+  <entry-point class='org.gwtproject.activity.example.simple.client.SimpleEntry' />
+  <stylesheet src='simple.css' />
+</module>

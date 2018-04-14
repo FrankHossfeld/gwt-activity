@@ -19,18 +19,17 @@ import com.google.gwt.event.shared.ResettableEventBus;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceChangeRequestEvent;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
  * {@link PlaceChangeEvent} events. Each activity can start itself
- * asynchronously, and provides a widget to be shown when it's ready to run.
+ * asynchronously, and provides a view to be shown when it's ready to run.
  */
 public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler {
 
@@ -38,14 +37,14 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * Wraps our real display to prevent an Activity from taking it over if it is
    * not the currentActivity.
    */
-  private class ProtectedDisplay implements AcceptsOneWidget {
+  private class ProtectedDisplay implements Consumer<Activity.View> {
     private final Activity activity;
 
     ProtectedDisplay(Activity activity) {
       this.activity = activity;
     }
 
-    public void setWidget(IsWidget view) {
+    public void accept(Activity.View view) {
       if (this.activity == ActivityManager.this.currentActivity) {
         startingNext = false;
         showWidget(view);
@@ -54,7 +53,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   }
 
   private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-    public void start(AcceptsOneWidget panel, com.google.gwt.event.shared.EventBus eventBus) {
+    public void start(Consumer<Activity.View> panel, com.google.gwt.event.shared.EventBus eventBus) {
     }
   };
 
@@ -70,7 +69,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
   private Activity currentActivity = NULL_ACTIVITY;
 
-  private AcceptsOneWidget display;
+  private Consumer<Activity.View> display;
 
   private boolean startingNext = false;
 
@@ -188,7 +187,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * 
    * @param display an instance of AcceptsOneWidget
    */
-  public void setDisplay(AcceptsOneWidget display) {
+  public void setDisplay(Consumer<Activity.View> display) {
     boolean wasActive = (null != this.display);
     boolean willBeActive = (null != display);
     this.display = display;
@@ -209,9 +208,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     return mapper.getActivity(event.getNewPlace());
   }
 
-  private void showWidget(IsWidget view) {
+  private void showWidget(Activity.View view) {
     if (display != null) {
-      display.setWidget(view);
+      display.accept(view);
     }
   }
 
