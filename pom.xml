@@ -58,10 +58,69 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- <dependency> <groupId>com.github.tbroyer.gwt-events</groupId> <artifactId>gwt-event</artifactId> 
-      <version>master-SNAPSHOT</version> </dependency> <dependency> <groupId>???</groupId> <artifactId>web-bindery-event</artifactId> 
-      <version>master-SNAPSHOT</version> </dependency> <dependency> <groupId>com.github.tbroyer</groupId> <artifactId>gwt-places</artifactId> 
-      <version>master-SNAPSHOT</version> </dependency> -->
+    <!-- Should depend only on gwt-event and gwt-place, the rest are hacks -->
+    <dependency>
+      <groupId>com.github.tbroyer.gwt-events</groupId>
+      <artifactId>gwt-event</artifactId>
+      <version>master-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tbroyer</groupId>
+      <artifactId>gwt-places</artifactId>
+      <version>master-SNAPSHOT</version>
+      <exclusions>
+        <!-- Temporary until proper snapshots are available sonatype -->
+        <exclusion>
+          <groupId>org.gwtproject.event</groupId>
+          <artifactId>gwt-event</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gwtproject.event</groupId>
+          <artifactId>gwt-logical-event</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gwtproject.user.history</groupId>
+          <artifactId>gwt-history</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gwtproject.user.window</groupId>
+          <artifactId>gwt-window</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tbroyer</groupId>
+      <artifactId>gwt-window</artifactId>
+      <version>master-SNAPSHOT</version>
+      <exclusions>
+        <!-- Temporary until proper snapshots are available sonatype -->
+        <exclusion>
+          <groupId>org.gwtproject.event</groupId>
+          <artifactId>gwt-logical-event</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tbroyer</groupId>
+      <artifactId>gwt-history</artifactId>
+      <version>master-SNAPSHOT</version>
+      <exclusions>
+        <!-- Temporary until proper snapshots are available sonatype -->
+        <exclusion>
+          <groupId>org.gwtproject.event</groupId>
+          <artifactId>gwt-logical-event</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.gwtproject.user.window</groupId>
+          <artifactId>gwt-window</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tbroyer.gwt-events</groupId>
+      <artifactId>gwt-logical-event</artifactId>
+      <version>master-SNAPSHOT</version>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
@@ -87,6 +146,9 @@
     <repository>
       <id>jitpack</id>
       <url>https://jitpack.io</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
 

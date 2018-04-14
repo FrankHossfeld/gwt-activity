@@ -15,16 +15,16 @@
  */
 package org.gwtproject.activity.shared;
 
-import com.google.gwt.event.shared.ResettableEventBus;
-import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.place.shared.PlaceChangeRequestEvent;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import org.gwtproject.event.shared.EventBus;
+import org.gwtproject.event.shared.HandlerRegistration;
+import org.gwtproject.event.shared.ResettableEventBus;
+import org.gwtproject.event.shared.UmbrellaException;
+import org.gwtproject.place.shared.PlaceChangeEvent;
+import org.gwtproject.place.shared.PlaceChangeRequestEvent;
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
@@ -53,7 +53,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   }
 
   private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-    public void start(Consumer<Activity.View> panel, com.google.gwt.event.shared.EventBus eventBus) {
+    public void start(Consumer<Activity.View> panel, EventBus eventBus) {
     }
   };
 

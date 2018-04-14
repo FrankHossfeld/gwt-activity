@@ -6,15 +6,16 @@ import org.gwtproject.activity.example.simple.client.about.AboutPlace;
 import org.gwtproject.activity.example.simple.client.home.HomePlace;
 import org.gwtproject.activity.shared.ActivityManager;
 import org.gwtproject.activity.shared.ActivityMapper;
+import org.gwtproject.event.shared.EventBus;
+import org.gwtproject.event.shared.SimpleEventBus;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
+import org.gwtproject.place.shared.Place;
+import org.gwtproject.place.shared.PlaceController;
+import org.gwtproject.place.shared.PlaceHistoryHandler;
+import org.gwtproject.place.shared.PlaceHistoryMapper;
+
 import com.google.gwt.user.client.Timer;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import elemental2.dom.Element;
 
@@ -31,7 +32,7 @@ public class SimpleEntry implements EntryPoint {
     activityManager.setDisplay(new SimpleDisplay(displayElement));
 
     PlaceController placeController = new PlaceController(eventBus);
-    SimplePlaceHistoryMapper placeHistoryMapper = GWT.create(SimplePlaceHistoryMapper.class);
+    PlaceHistoryMapper placeHistoryMapper = new SimplePlaceHistoryMapperImpl();
     PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(placeHistoryMapper);
     Place defaultPlace = new HomePlace();
 

@@ -17,14 +17,13 @@ package org.gwtproject.activity.shared;
 
 import java.util.function.Consumer;
 
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.UmbrellaException;
-import com.google.gwt.event.shared.testing.CountingEventBus;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.place.shared.PlaceChangeRequestEvent;
+import org.gwtproject.event.shared.Event;
+import org.gwtproject.event.shared.EventBus;
+import org.gwtproject.event.shared.UmbrellaException;
+import org.gwtproject.event.shared.testing.CountingEventBus;
+import org.gwtproject.place.shared.Place;
+import org.gwtproject.place.shared.PlaceChangeEvent;
+import org.gwtproject.place.shared.PlaceChangeRequestEvent;
 
 import junit.framework.TestCase;
 
@@ -48,11 +47,11 @@ public class ActivityManagerTest extends TestCase {
     }
   }
 
-  private static class Event extends GwtEvent<Handler> {
-    private static GwtEvent.Type<EventHandler> TYPE = new GwtEvent.Type<EventHandler>();
+  private static class MyEvent extends Event<Handler> {
+    private static Event.Type<Handler> TYPE = new Event.Type<Handler>();
 
     @Override
-    public GwtEvent.Type<Handler> getAssociatedType() {
+    public Event.Type<Handler> getAssociatedType() {
       throw new UnsupportedOperationException("Auto-generated method stub");
     }
 
@@ -62,7 +61,7 @@ public class ActivityManagerTest extends TestCase {
     }
   }
 
-  private static class Handler implements EventHandler {
+  private static class Handler {
   };
 
   private static class MyDisplay implements Consumer<Activity.View> {
@@ -164,14 +163,13 @@ public class ActivityManagerTest extends TestCase {
     manager.setDisplay(realDisplay);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
-    com.google.web.bindery.event.shared.EventBus activeEventBus =
-        manager.getActiveEventBus();
+    EventBus activeEventBus = manager.getActiveEventBus();
  
-    activeEventBus.addHandler(Event.TYPE, new Handler());
-    assertEquals(1, eventBus.getCount(Event.TYPE));
+    activeEventBus.addHandler(MyEvent.TYPE, new Handler());
+    assertEquals(1, eventBus.getHandlerCount(MyEvent.TYPE));
 
     eventBus.fireEvent(new PlaceChangeEvent(place2));
-    assertEquals(0, eventBus.getCount(Event.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(MyEvent.TYPE));
   }
   
   public void testAsyncDispatch() {
@@ -195,8 +193,7 @@ public class ActivityManagerTest extends TestCase {
     manager = new ActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
 
-    PlaceChangeRequestEvent event = new PlaceChangeRequestEvent(
-        place1);
+    PlaceChangeRequestEvent event = new PlaceChangeRequestEvent(place1);
     eventBus.fireEvent(event);
     assertNull(event.getWarning());
     assertNull(realDisplay.view);
@@ -298,48 +295,48 @@ public class ActivityManagerTest extends TestCase {
   public void testDropHandlersOnStop() {
     manager.setDisplay(realDisplay);
 
-    assertEquals(0, eventBus.getCount(Event.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(MyEvent.TYPE));
 
     activity1 = new SyncActivity(null) {
       @Override
       public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
       }
 
       @Override
       public void onStop() {
         super.onStop();
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
       }
     };
 
     PlaceChangeEvent event = new PlaceChangeEvent(place1);
     eventBus.fireEvent(event);
-    assertEquals(1, eventBus.getCount(Event.TYPE));
+    assertEquals(1, eventBus.getHandlerCount(MyEvent.TYPE));
 
     event = new PlaceChangeEvent(place2);
     eventBus.fireEvent(event);
-    assertEquals(0, eventBus.getCount(Event.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(MyEvent.TYPE));
 
     // Make sure we didn't nuke the ActivityManager's own handlers
-    assertEquals(1, eventBus.getCount(PlaceChangeEvent.TYPE));
-    assertEquals(1, eventBus.getCount(PlaceChangeRequestEvent.TYPE));
+    assertEquals(1, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
+    assertEquals(1, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
   }
 
   public void testEventSetupAndTeardown() {
-    assertEquals(0, eventBus.getCount(PlaceChangeEvent.TYPE));
-    assertEquals(0, eventBus.getCount(PlaceChangeRequestEvent.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
 
     manager.setDisplay(realDisplay);
 
-    assertEquals(1, eventBus.getCount(PlaceChangeEvent.TYPE));
-    assertEquals(1, eventBus.getCount(PlaceChangeRequestEvent.TYPE));
+    assertEquals(1, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
+    assertEquals(1, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
 
     manager.setDisplay(null);
 
-    assertEquals(0, eventBus.getCount(PlaceChangeEvent.TYPE));
-    assertEquals(0, eventBus.getCount(PlaceChangeRequestEvent.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
   }
 
   public void testExceptionsOnStartAndCancel() {
@@ -347,12 +344,12 @@ public class ActivityManagerTest extends TestCase {
       @Override
       public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
       }
       @Override
       public void onCancel() {
         super.onCancel();
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
         throw new UnsupportedOperationException("Exception on cancel");
       }
     };
@@ -370,7 +367,7 @@ public class ActivityManagerTest extends TestCase {
     try {
       PlaceChangeEvent event = new PlaceChangeEvent(place1);
       eventBus.fireEvent(event);
-      assertEquals(1, eventBus.getCount(Event.TYPE));
+      assertEquals(1, eventBus.getHandlerCount(MyEvent.TYPE));
 
       event = new PlaceChangeEvent(place2);
       eventBus.fireEvent(event);
@@ -386,7 +383,7 @@ public class ActivityManagerTest extends TestCase {
 
     assertTrue(activity1.canceled);
     assertNotNull(activity2.display);
-    assertEquals(0, eventBus.getCount(Event.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(MyEvent.TYPE));
   }
   
   public void testExceptionsOnStopAndStart() {
@@ -394,12 +391,12 @@ public class ActivityManagerTest extends TestCase {
       @Override
       public void start(Consumer<Activity.View> panel, EventBus eventBus) {
         super.start(panel, eventBus);
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
       }
       @Override
       public void onStop() {
         super.onStop();
-        bus.addHandler(Event.TYPE, new Handler());
+        bus.addHandler(MyEvent.TYPE, new Handler());
         throw new UnsupportedOperationException("Exception on stop");
       }
     };
@@ -417,7 +414,7 @@ public class ActivityManagerTest extends TestCase {
     try {
       PlaceChangeEvent event = new PlaceChangeEvent(place1);
       eventBus.fireEvent(event);
-      assertEquals(1, eventBus.getCount(Event.TYPE));
+      assertEquals(1, eventBus.getHandlerCount(MyEvent.TYPE));
 
       event = new PlaceChangeEvent(place2);
       eventBus.fireEvent(event);
@@ -433,7 +430,7 @@ public class ActivityManagerTest extends TestCase {
 
     assertTrue(activity1.stopped);
     assertNotNull(activity2.display);
-    assertEquals(0, eventBus.getCount(Event.TYPE));
+    assertEquals(0, eventBus.getHandlerCount(MyEvent.TYPE));
   }
   
   /**

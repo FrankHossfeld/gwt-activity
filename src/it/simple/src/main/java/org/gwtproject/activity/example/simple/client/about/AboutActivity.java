@@ -5,8 +5,7 @@ import java.util.function.Consumer;
 import org.gwtproject.activity.example.simple.client.SimpleView;
 import org.gwtproject.activity.shared.AbstractActivity;
 import org.gwtproject.activity.shared.Activity;
-
-import com.google.gwt.event.shared.EventBus;
+import org.gwtproject.event.shared.EventBus;
 
 import elemental2.dom.HTMLElement;
 

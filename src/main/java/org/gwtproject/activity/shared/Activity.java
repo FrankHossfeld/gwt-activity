@@ -17,7 +17,7 @@ package org.gwtproject.activity.shared;
 
 import java.util.function.Consumer;
 
-import com.google.gwt.event.shared.EventBus;
+import org.gwtproject.event.shared.EventBus;
 
 /**
  * Implemented by objects that control a piece of user interface, with a life

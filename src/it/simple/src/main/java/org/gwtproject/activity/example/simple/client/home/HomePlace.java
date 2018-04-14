@@ -1,8 +1,8 @@
 package org.gwtproject.activity.example.simple.client.home;
 
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceTokenizer;
-import com.google.gwt.place.shared.Prefix;
+import org.gwtproject.place.shared.Place;
+import org.gwtproject.place.shared.PlaceTokenizer;
+import org.gwtproject.place.shared.Prefix;
 
 public class HomePlace extends Place {
   

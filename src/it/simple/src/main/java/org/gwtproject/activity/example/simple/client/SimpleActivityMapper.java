@@ -6,8 +6,7 @@ import org.gwtproject.activity.example.simple.client.home.HomeActivity;
 import org.gwtproject.activity.example.simple.client.home.HomePlace;
 import org.gwtproject.activity.shared.Activity;
 import org.gwtproject.activity.shared.ActivityMapper;
-
-import com.google.gwt.place.shared.Place;
+import org.gwtproject.place.shared.Place;
 
 public class SimpleActivityMapper implements ActivityMapper {
 

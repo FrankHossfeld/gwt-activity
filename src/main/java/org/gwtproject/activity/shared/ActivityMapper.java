@@ -15,7 +15,7 @@
  */
 package org.gwtproject.activity.shared;
 
-import com.google.gwt.place.shared.Place;
+import org.gwtproject.place.shared.Place;
 
 /**
  * Finds the activity to run for a given {@link Place}, used to configure

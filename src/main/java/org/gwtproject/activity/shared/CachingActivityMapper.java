@@ -15,7 +15,7 @@
  */
 package org.gwtproject.activity.shared;
 
-import com.google.gwt.place.shared.Place;
+import org.gwtproject.place.shared.Place;
 
 /**
  * Wraps another {@link ActivityMapper} and caches the last activity it

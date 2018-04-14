@@ -15,7 +15,7 @@
  */
 package org.gwtproject.activity.shared;
 
-import com.google.gwt.place.shared.Place;
+import org.gwtproject.place.shared.Place;
 
 /**
  * Wraps an activity mapper and applies a filter to the place objects that it

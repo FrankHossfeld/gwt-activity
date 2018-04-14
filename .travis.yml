@@ -6,8 +6,14 @@ cache:
   directories:
    - $HOME/.m2
 
+before_script:
+ - git clone https://github.com/tbroyer/gwt-places.git
+ - cd gwt-places
+ - ./gradlew build
+ - cd ..
+
 script:
- - ./mvnw verify -Pci
+ - ./mvnw verify -Pci -Dgwt-places.dir=./gwt-places
 
 notifications:
   email: false
