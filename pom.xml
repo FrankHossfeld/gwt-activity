@@ -167,7 +167,10 @@
                 <resource>
                   <!-- TODO: Remove when time comes -->
                   <directory>${project.build.sourceDirectory}</directory>
-                  <include>org/gwtproject/user/client/**/*.java</include>
+                  <includes>
+                    <include>org/gwtproject/user/client/**/*.java</include>
+                    <include>org/gwtproject/user/UI.gwt.xml</include>
+                  </includes>
                   <filtering>false</filtering>
                 </resource>
               </resources>
