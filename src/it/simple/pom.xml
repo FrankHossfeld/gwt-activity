@@ -12,7 +12,8 @@
   <name>Simple Activity project</name>
 
   <properties>
-    <gin.version>@project.version@</gin.version> <!-- dynamic for invoker, see profiles -->
+    <!-- dynamic for invoker, see profiles -->
+    <gwt-activity.version>@project.version@</gwt-activity.version>
   </properties>
 
   <dependencyManagement>
@@ -46,56 +47,15 @@
     <dependency>
       <groupId>org.gwtproject.activity</groupId>
       <artifactId>gwt-activity</artifactId>
-      <version>${gin.version}</version>
+      <version>${gwt-activity.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.gwtproject.place</groupId>
-      <artifactId>gwt-place-apt</artifactId>
-      <version>HEAD-SNAPSHOT</version>
-      <optional>true</optional>
-      <scope>system</scope>
-      <systemPath>${gwt-places.dir}/processor/build/libs/processor-HEAD-SNAPSHOT.jar</systemPath>
+      <groupId>com.github.gwtplus.gwt-place</groupId>
+      <artifactId>gwt-place-processor</artifactId>
+      <version>pom_and_checkstyle-SNAPSHOT</version>
+      <optional>true</optional> <!-- apt -->
     </dependency>
-
-    <!-- For gwt-places-apt -->
-    <dependency>
-      <groupId>com.google.auto</groupId>
-      <artifactId>auto-common</artifactId>
-      <version>0.10</version> <!-- or use a known release version -->
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.tbroyer</groupId>
-      <artifactId>gwt-places</artifactId>
-      <version>master-SNAPSHOT</version>
-      <exclusions>
-        <!-- Temporary until proper snapshots are available sonatype -->
-        <exclusion>
-          <groupId>org.gwtproject.event</groupId>
-          <artifactId>gwt-event</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.gwtproject.event</groupId>
-          <artifactId>gwt-logical-event</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.gwtproject.user.history</groupId>
-          <artifactId>gwt-history</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.gwtproject.user.window</groupId>
-          <artifactId>gwt-window</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.squareup</groupId>
-      <artifactId>javapoet</artifactId>
-      <version>1.9.0</version>
-    </dependency>
-
   </dependencies>
 
   <repositories>
@@ -159,7 +119,7 @@
     <profile>
       <id>head-version</id> <!-- enable when importing to IDE -->
       <properties>
-        <gin.version>HEAD-SNAPSHOT</gin.version>
+        <gwt-activity.version>HEAD-SNAPSHOT</gwt-activity.version>
       </properties>
     </profile>
   </profiles>

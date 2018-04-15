@@ -15,9 +15,6 @@
  */
 package org.gwtproject.activity.shared;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.gwtproject.event.shared.EventBus;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.gwtproject.event.shared.ResettableEventBus;
@@ -26,6 +23,9 @@ import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
 import org.gwtproject.user.client.ui.AcceptsOneWidget;
 import org.gwtproject.user.client.ui.IsWidget;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
@@ -172,7 +172,8 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   /**
    * Reject the place change if the current activity is not willing to stop.
    * 
-   * @see org.gwtproject.place.shared.PlaceChangeRequestEvent.Handler#onPlaceChangeRequest(PlaceChangeRequestEvent)
+   * @see org.gwtproject.place.shared.PlaceChangeRequestEvent.Handler#
+   *      onPlaceChangeRequest(PlaceChangeRequestEvent)
    */
   public void onPlaceChangeRequest(PlaceChangeRequestEvent event) {
     event.setWarning(currentActivity.mayStop());
