@@ -4,7 +4,7 @@
   <!-- Inherit the core Web Toolkit stuff. -->
   <inherits name='com.google.gwt.user.User' />
   
-  <inherits name='elemental2.dom.Dom' />
+  <inherits name='org.gwtproject.timer.Timer' />
   <inherits name='org.gwtproject.activity.Activity' />
 
   <!-- Inherit the default GWT style sheet. -->

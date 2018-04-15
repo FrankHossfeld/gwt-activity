@@ -193,6 +193,12 @@
                   <include>org/gwtproject/activity/shared/**/*.java</include>
                   <filtering>false</filtering>
                 </resource>
+                <resource>
+                  <!-- TODO: Remove when time comes -->
+                  <directory>${project.build.sourceDirectory}</directory>
+                  <include>org/gwtproject/user/client/**/*.java</include>
+                  <filtering>false</filtering>
+                </resource>
               </resources>
             </configuration>
           </execution>

@@ -1,15 +1,11 @@
 package org.gwtproject.activity.example.simple.client.about;
 
-import java.util.function.Consumer;
-
-import org.gwtproject.activity.example.simple.client.SimpleView;
 import org.gwtproject.activity.shared.AbstractActivity;
 import org.gwtproject.activity.shared.Activity;
 import org.gwtproject.event.shared.EventBus;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
 
-import elemental2.dom.HTMLElement;
-
-import static elemental2.dom.DomGlobal.document;
+import com.google.gwt.user.client.ui.Label;
 
 public class AboutActivity extends AbstractActivity implements Activity {
 
@@ -20,14 +16,13 @@ public class AboutActivity extends AbstractActivity implements Activity {
   }
 
   @Override
-  public void start(Consumer<View> container, EventBus eventBus) {
+  public void start(AcceptsOneWidget panel, EventBus eventBus) {
     String param = place.getParam();
     if (param == null) { param = "empty"; }
     
-    HTMLElement span = (HTMLElement) document.createElement("span");
-    span.innerHTML = "About (" + param + ")";
+    Label label = new Label("About (" + param + ")");
     
-    container.accept(new SimpleView(span));
+    panel.setWidget(label::asWidget); // temporary workaround
   }
 
 }

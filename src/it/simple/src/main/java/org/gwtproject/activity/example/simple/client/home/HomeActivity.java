@@ -1,24 +1,19 @@
 package org.gwtproject.activity.example.simple.client.home;
 
-import static elemental2.dom.DomGlobal.document;
-
-import java.util.function.Consumer;
-
-import org.gwtproject.activity.example.simple.client.SimpleView;
 import org.gwtproject.activity.shared.AbstractActivity;
 import org.gwtproject.activity.shared.Activity;
 import org.gwtproject.event.shared.EventBus;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
 
-import elemental2.dom.HTMLElement;
+import com.google.gwt.user.client.ui.Label;
 
 public class HomeActivity extends AbstractActivity implements Activity {
 
   @Override
-  public void start(Consumer<View> container, EventBus eventBus) {
-    HTMLElement span = (HTMLElement) document.createElement("span");
-    span.innerHTML = "Home (redirecting to About)";
+  public void start(AcceptsOneWidget panel, EventBus eventBus) {
+    Label label = new Label("Home (redirecting to About)");
     
-    container.accept(new SimpleView(span));
+    panel.setWidget(label::asWidget); // temporary workaround
   }
 
 }

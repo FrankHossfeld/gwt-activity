@@ -15,8 +15,6 @@
  */
 package org.gwtproject.activity.shared;
 
-import java.util.function.Consumer;
-
 import org.gwtproject.event.shared.Event;
 import org.gwtproject.event.shared.EventBus;
 import org.gwtproject.event.shared.UmbrellaException;
@@ -24,6 +22,10 @@ import org.gwtproject.event.shared.testing.CountingEventBus;
 import org.gwtproject.place.shared.Place;
 import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
+import org.gwtproject.user.client.ui.IsWidget;
+
+import com.google.gwt.user.client.ui.Widget;
 
 import junit.framework.TestCase;
 
@@ -37,13 +39,13 @@ public class ActivityManagerTest extends TestCase {
     }
 
     @Override
-    public void start(Consumer<Activity.View> display, EventBus eventBus) {
+    public void start(AcceptsOneWidget display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
     }
 
     void finish() {
-      display.accept(view);
+      display.setWidget(view);
     }
   }
 
@@ -64,11 +66,11 @@ public class ActivityManagerTest extends TestCase {
   private static class Handler {
   };
 
-  private static class MyDisplay implements Consumer<Activity.View> {
-    Activity.View view = null;
+  private static class MyDisplay implements AcceptsOneWidget {
+    IsWidget view = null;
 
     @Override
-    public void accept(Activity.View view) {
+    public void setWidget(IsWidget view) {
       this.view = view;
     }
   }
@@ -76,13 +78,16 @@ public class ActivityManagerTest extends TestCase {
   private static class MyPlace extends Place {
   }
 
-  private static class MyView implements Activity.View {
-    
+  private static class MyView implements IsWidget {
+    @Override
+    public Widget asWidget() {
+      return null;
+    }
   }
   private static class SyncActivity implements Activity {
     boolean canceled = false;
     boolean stopped = false;
-    Consumer<Activity.View> display;
+    AcceptsOneWidget display;
     String stopWarning;
     MyView view;
     EventBus bus;
@@ -107,10 +112,10 @@ public class ActivityManagerTest extends TestCase {
     }
 
     @Override
-    public void start(Consumer<Activity.View> display, EventBus eventBus) {
+    public void start(AcceptsOneWidget display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
-      display.accept(view);
+      display.setWidget(view);
     }
   }
 
@@ -299,7 +304,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -342,7 +347,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStartAndCancel() {
     activity1 = new AsyncActivity(null) {
       @Override
-      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -356,7 +361,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -389,7 +394,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStopAndStart() {
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -403,7 +408,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -552,11 +557,11 @@ public class ActivityManagerTest extends TestCase {
       }
       
       void secondView() {
-        display.accept(view2);
+        display.setWidget(view2);
       }
       
       void firstView() {
-        display.accept(view);
+        display.setWidget(view);
       }
     }
     final TwoViewActivity activity = new TwoViewActivity(new MyView(), new MyView());

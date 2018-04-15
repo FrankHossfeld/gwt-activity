@@ -17,7 +17,6 @@ package org.gwtproject.activity.shared;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.gwtproject.event.shared.EventBus;
 import org.gwtproject.event.shared.HandlerRegistration;
@@ -25,11 +24,13 @@ import org.gwtproject.event.shared.ResettableEventBus;
 import org.gwtproject.event.shared.UmbrellaException;
 import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
+import org.gwtproject.user.client.ui.IsWidget;
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
  * {@link PlaceChangeEvent} events. Each activity can start itself
- * asynchronously, and provides a view to be shown when it's ready to run.
+ * asynchronously, and provides a widget to be shown when it's ready to run.
  */
 public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler {
 
@@ -37,14 +38,14 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * Wraps our real display to prevent an Activity from taking it over if it is
    * not the currentActivity.
    */
-  private class ProtectedDisplay implements Consumer<Activity.View> {
+  private class ProtectedDisplay implements AcceptsOneWidget {
     private final Activity activity;
 
     ProtectedDisplay(Activity activity) {
       this.activity = activity;
     }
 
-    public void accept(Activity.View view) {
+    public void setWidget(IsWidget view) {
       if (this.activity == ActivityManager.this.currentActivity) {
         startingNext = false;
         showWidget(view);
@@ -53,7 +54,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   }
 
   private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-    public void start(Consumer<Activity.View> panel, EventBus eventBus) {
+    public void start(AcceptsOneWidget panel, EventBus eventBus) {
     }
   };
 
@@ -69,7 +70,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
   private Activity currentActivity = NULL_ACTIVITY;
 
-  private Consumer<Activity.View> display;
+  private AcceptsOneWidget display;
 
   private boolean startingNext = false;
 
@@ -79,7 +80,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * Create an ActivityManager. Next call {@link #setDisplay}.
    * 
    * @param mapper finds the {@link Activity} for a given
-   *          {@link com.google.gwt.place.shared.Place}
+   *          {@link org.gwtproject.place.shared.Place}
    * @param eventBus source of {@link PlaceChangeEvent} and
    *          {@link PlaceChangeRequestEvent} events.
    */
@@ -171,7 +172,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   /**
    * Reject the place change if the current activity is not willing to stop.
    * 
-   * @see com.google.gwt.place.shared.PlaceChangeRequestEvent.Handler#onPlaceChangeRequest(PlaceChangeRequestEvent)
+   * @see org.gwtproject.place.shared.PlaceChangeRequestEvent.Handler#onPlaceChangeRequest(PlaceChangeRequestEvent)
    */
   public void onPlaceChangeRequest(PlaceChangeRequestEvent event) {
     event.setWarning(currentActivity.mayStop());
@@ -182,12 +183,12 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * stopping its monitoring the event bus for place change events.
    * <p>
    * If you are disposing of an ActivityManager, it is important to call
-   * setDisplay(null) to get it to deregister from the event bus, so that it can
+   * setDisplay(null) to get it to de-register from the event bus, so that it can
    * be garbage collected.
    * 
    * @param display an instance of AcceptsOneWidget
    */
-  public void setDisplay(Consumer<Activity.View> display) {
+  public void setDisplay(AcceptsOneWidget display) {
     boolean wasActive = (null != this.display);
     boolean willBeActive = (null != display);
     this.display = display;
@@ -208,9 +209,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     return mapper.getActivity(event.getNewPlace());
   }
 
-  private void showWidget(Activity.View view) {
+  private void showWidget(IsWidget view) {
     if (display != null) {
-      display.accept(view);
+      display.setWidget(view);
     }
   }
 

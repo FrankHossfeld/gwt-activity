@@ -38,9 +38,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.elemental2</groupId>
-      <artifactId>elemental2-dom</artifactId>
-      <version>1.0.0-RC1</version>
+      <groupId>com.github.vegegoku</groupId>
+      <artifactId>gwt-timer</artifactId>
+      <version>master-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -89,7 +89,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
