@@ -16,15 +16,16 @@
 package org.gwtproject.activity.shared;
 
 import org.gwtproject.event.shared.EventBus;
-import org.gwtproject.user.client.ui.AcceptsOneWidget;
 
 /**
  * Implemented by objects that control a piece of user interface, with a life
  * cycle managed by an {@link ActivityManager}, in response to
  * {@link org.gwtproject.place.shared.PlaceChangeEvent} events as the user
  * navigates through the app.
+ * 
+ * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public interface Activity {
+public interface Activity<V> {
   
   /**
    * Called when the user is trying to navigate away from this activity.
@@ -50,7 +51,7 @@ public interface Activity {
    * Called when the Activity should ready its widget for the user. When the
    * widget is ready (typically after an RPC response has been received),
    * receiver should present it by calling
-   * {@link AcceptsOneWidget#setWidget} on the given panel.
+   * {@link ActivityDisplay#show} on the given panel.
    * <p>
    * Any handlers attached to the provided event bus will be de-registered when
    * the activity is stopped, so activities will rarely need to hold on to the
@@ -60,5 +61,5 @@ public interface Activity {
    * @param panel the panel to display this activity's widget when it is ready
    * @param eventBus the event bus
    */
-  void start(AcceptsOneWidget panel, EventBus eventBus);
+  void start(ActivityDisplay<V> panel, EventBus eventBus);
 }

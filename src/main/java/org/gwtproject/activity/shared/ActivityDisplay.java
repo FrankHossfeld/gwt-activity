@@ -15,21 +15,22 @@
  */
 package org.gwtproject.activity.shared;
 
-/**
- * Simple Activity implementation that is always willing to stop, and does
- * nothing onStop and onCancel.
+import org.gwtproject.activity.widget.shared.WidgetActivityDisplay;
+
+/** Display used to show views of type {@code V}.
  * 
  * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public abstract class AbstractActivity<V> implements Activity<V> {
+public interface ActivityDisplay<V> {
 
-  public String mayStop() {
-    return null;
-  }
+  /**
+   * Set the element to display, replacing the previously displayed
+   * element if there was one.
+   *
+   * @param view object to display, or <code>null</code> to clear display
+   *
+   * @see WidgetActivityDisplay
+   */
+  void show(V view);
 
-  public void onCancel() {
-  }
-
-  public void onStop() {
-  }
 }

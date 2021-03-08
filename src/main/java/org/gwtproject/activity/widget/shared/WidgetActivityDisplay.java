@@ -13,23 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.activity.shared;
+package org.gwtproject.activity.widget.shared;
+
+import org.gwtproject.activity.shared.ActivityDisplay;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
+import org.gwtproject.user.client.ui.IsWidget;
 
 /**
- * Simple Activity implementation that is always willing to stop, and does
- * nothing onStop and onCancel.
- * 
- * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
+ * {@link ActivityDisplay} which wraps {@link AcceptsOneWidget} to provide
+ * display for {@link IsWidget} views.
  */
-public abstract class AbstractActivity<V> implements Activity<V> {
+public class WidgetActivityDisplay implements ActivityDisplay<IsWidget> {
 
-  public String mayStop() {
-    return null;
+  public WidgetActivityDisplay(AcceptsOneWidget delegate) {
+    this.delegate = delegate;
   }
 
-  public void onCancel() {
+  public void show(IsWidget widget) {
+    delegate.setWidget(widget);
   }
 
-  public void onStop() {
-  }
+  private final AcceptsOneWidget delegate;
+
 }

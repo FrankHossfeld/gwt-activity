@@ -20,12 +20,14 @@ import org.gwtproject.place.shared.Place;
 /**
  * Finds the activity to run for a given {@link Place}, used to configure
  * an {@link ActivityManager}.
+ * 
+ * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public interface ActivityMapper {
+public interface ActivityMapper<V> {
   /**
    * Returns the activity to run for the given {@link Place}, or null.
    *
    * @param place a Place object
    */
-  Activity getActivity(Place place);
+  Activity<V> getActivity(Place place);
 }

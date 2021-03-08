@@ -21,8 +21,6 @@ import org.gwtproject.event.shared.ResettableEventBus;
 import org.gwtproject.event.shared.UmbrellaException;
 import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
-import org.gwtproject.user.client.ui.AcceptsOneWidget;
-import org.gwtproject.user.client.ui.IsWidget;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -31,21 +29,24 @@ import java.util.Set;
  * Manages {@link Activity} objects that should be kicked off in response to
  * {@link PlaceChangeEvent} events. Each activity can start itself
  * asynchronously, and provides a widget to be shown when it's ready to run.
+ * 
+ * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler {
+public class ActivityManager<V> implements PlaceChangeEvent.Handler,
+  PlaceChangeRequestEvent.Handler {
 
   /**
    * Wraps our real display to prevent an Activity from taking it over if it is
    * not the currentActivity.
    */
-  private class ProtectedDisplay implements AcceptsOneWidget {
-    private final Activity activity;
+  private class ProtectedDisplay implements ActivityDisplay<V> {
+    private final Activity<V> activity;
 
-    ProtectedDisplay(Activity activity) {
+    ProtectedDisplay(Activity<V> activity) {
       this.activity = activity;
     }
 
-    public void setWidget(IsWidget view) {
+    public void show(V view) {
       if (this.activity == ActivityManager.this.currentActivity) {
         startingNext = false;
         showWidget(view);
@@ -53,12 +54,12 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     }
   }
 
-  private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-    public void start(AcceptsOneWidget panel, EventBus eventBus) {
+  private final Activity<V> nullActivity = new AbstractActivity<V>() {
+    public void start(ActivityDisplay<V> panel, EventBus eventBus) {
     }
   };
 
-  private final ActivityMapper mapper;
+  private final ActivityMapper<V> mapper;
 
   private final EventBus eventBus;
 
@@ -68,9 +69,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    */
   private final ResettableEventBus stopperedEventBus;
 
-  private Activity currentActivity = NULL_ACTIVITY;
+  private Activity<V> currentActivity = nullActivity;
 
-  private AcceptsOneWidget display;
+  private ActivityDisplay<V> display;
 
   private boolean startingNext = false;
 
@@ -84,7 +85,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * @param eventBus source of {@link PlaceChangeEvent} and
    *          {@link PlaceChangeRequestEvent} events.
    */
-  public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
+  public ActivityManager(ActivityMapper<V> mapper, EventBus eventBus) {
     this.mapper = mapper;
     this.eventBus = eventBus;
     this.stopperedEventBus = new ResettableEventBus(eventBus);
@@ -113,14 +114,14 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * treatment.
    */
   public void onPlaceChange(PlaceChangeEvent event) {
-    Activity nextActivity = getNextActivity(event);
+    Activity<V> nextActivity = getNextActivity(event);
 
     Throwable caughtOnStop = null;
     Throwable caughtOnCancel = null;
     Throwable caughtOnStart = null;
 
     if (nextActivity == null) {
-      nextActivity = NULL_ACTIVITY;
+      nextActivity = nullActivity;
     }
 
     if (currentActivity.equals(nextActivity)) {
@@ -131,9 +132,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
       // The place changed again before the new current activity showed its
       // widget
       caughtOnCancel = tryStopOrCancel(false);
-      currentActivity = NULL_ACTIVITY;
+      currentActivity = nullActivity;
       startingNext = false;
-    } else if (!currentActivity.equals(NULL_ACTIVITY)) {
+    } else if (!currentActivity.equals(nullActivity)) {
       showWidget(null);
 
       /*
@@ -146,7 +147,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
     currentActivity = nextActivity;
 
-    if (currentActivity.equals(NULL_ACTIVITY)) {
+    if (currentActivity.equals(nullActivity)) {
       showWidget(null);
     } else {
       startingNext = true;
@@ -189,7 +190,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
    * 
    * @param display an instance of AcceptsOneWidget
    */
-  public void setDisplay(AcceptsOneWidget display) {
+  public void setDisplay(ActivityDisplay<V> display) {
     boolean wasActive = (null != this.display);
     boolean willBeActive = (null != display);
     this.display = display;
@@ -198,7 +199,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     }
   }
 
-  private Activity getNextActivity(PlaceChangeEvent event) {
+  private Activity<V> getNextActivity(PlaceChangeEvent event) {
     if (display == null) {
       /*
        * Display may have been nulled during PlaceChangeEvent dispatch. Don't
@@ -210,9 +211,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     return mapper.getActivity(event.getNewPlace());
   }
 
-  private void showWidget(IsWidget view) {
+  private void showWidget(V view) {
     if (display != null) {
-      display.setWidget(view);
+      display.show(view);
     }
   }
 

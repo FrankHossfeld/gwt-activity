@@ -20,24 +20,26 @@ import org.gwtproject.place.shared.Place;
 /**
  * Wraps another {@link ActivityMapper} and caches the last activity it
  * returned, to be re-used if we see the same place twice.
+ * 
+ * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public class CachingActivityMapper implements ActivityMapper {
+public class CachingActivityMapper<V> implements ActivityMapper<V> {
 
-  private final ActivityMapper wrapped;
+  private final ActivityMapper<V> wrapped;
 
   private Place lastPlace;
-  private Activity lastActivity;
+  private Activity<V> lastActivity;
 
   /**
    * Constructs a CachingActivityMapper object.
    *
    * @param wrapped an ActivityMapper object
    */
-  public CachingActivityMapper(ActivityMapper wrapped) {
+  public CachingActivityMapper(ActivityMapper<V> wrapped) {
     this.wrapped = wrapped;
   }
 
-  public Activity getActivity(Place place) {
+  public Activity<V> getActivity(Place place) {
     if (!place.equals(lastPlace)) {
       lastPlace = place;
       lastActivity = wrapped.getActivity(place);

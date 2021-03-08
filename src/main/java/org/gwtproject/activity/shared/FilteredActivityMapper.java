@@ -20,8 +20,10 @@ import org.gwtproject.place.shared.Place;
 /**
  * Wraps an activity mapper and applies a filter to the place objects that it
  * sees.
+ * 
+ * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
  */
-public class FilteredActivityMapper implements ActivityMapper {
+public class FilteredActivityMapper<V> implements ActivityMapper<V> {
 
   /**
    * Implemented by objects that want to interpret one place as another.
@@ -37,7 +39,7 @@ public class FilteredActivityMapper implements ActivityMapper {
   }
 
   private final Filter filter;
-  private final ActivityMapper wrapped;
+  private final ActivityMapper<V> wrapped;
 
   /**
    * Constructs a FilteredActivityMapper object.
@@ -45,12 +47,12 @@ public class FilteredActivityMapper implements ActivityMapper {
    * @param filter a Filter object
    * @param wrapped an ActivityMapper object
    */
-  public FilteredActivityMapper(Filter filter, ActivityMapper wrapped) {
+  public FilteredActivityMapper(Filter filter, ActivityMapper<V> wrapped) {
     this.filter = filter;
     this.wrapped = wrapped;
   }
 
-  public Activity getActivity(Place place) {
+  public Activity<V> getActivity(Place place) {
     return wrapped.getActivity(filter.filter(place));
   }
 }
