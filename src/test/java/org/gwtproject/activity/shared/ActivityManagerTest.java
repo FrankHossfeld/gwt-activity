@@ -24,8 +24,7 @@ import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
 import org.gwtproject.user.client.ui.AcceptsOneWidget;
 import org.gwtproject.user.client.ui.IsWidget;
-
-import com.google.gwt.user.client.ui.Widget;
+import org.gwtproject.user.client.ui.Widget;
 
 import junit.framework.TestCase;
 
