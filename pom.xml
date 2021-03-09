@@ -191,6 +191,7 @@
         <configuration>
           <includes>
             <include>org/gwtproject/activity/ActivityJreSuite.java</include>
+            <include>org/gwtproject/activity/widget/WidgetActivityJreSuite.java</include>
           </includes>
         </configuration>
       </plugin>
