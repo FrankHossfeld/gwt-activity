@@ -37,9 +37,13 @@ public class WidgetActivityManager extends ActivityManager<IsWidget> {
   public void setDisplay(AcceptsOneWidget display) {
     // since ActivityManager holds a reference to passed display,
     // make sure we return same ActivityDisplay for same AcceptsOneWidget
+    // NOTE: ActivityManager really doesn't care for instance eqaulity,
+    // all it cares is transitions to/from null, so possible simplification
+    // could be to provide new wrapper in each call 
     if (display == null) {
       wrapperDisplay = null;
     } else if (display != widgetDisplay) {
+      widgetDisplay = display;
       wrapperDisplay = display::setWidget;
     }
     super.setDisplay(wrapperDisplay);
