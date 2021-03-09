@@ -24,6 +24,7 @@ import org.gwtproject.user.client.ui.IsWidget;
  */
 public interface WidgetActivityMapper extends ActivityMapper<IsWidget> {
 
+  @Override
   WidgetActivity getActivity(Place place);
 
 }
