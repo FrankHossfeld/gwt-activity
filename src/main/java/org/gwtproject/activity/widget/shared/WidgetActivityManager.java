@@ -15,7 +15,6 @@
  */
 package org.gwtproject.activity.widget.shared;
 
-import org.gwtproject.activity.shared.ActivityDisplay;
 import org.gwtproject.activity.shared.ActivityManager;
 import org.gwtproject.event.shared.EventBus;
 import org.gwtproject.user.client.ui.AcceptsOneWidget;
@@ -26,27 +25,12 @@ import org.gwtproject.user.client.ui.IsWidget;
  */
 public class WidgetActivityManager extends ActivityManager<IsWidget> {
 
-  private AcceptsOneWidget widgetDisplay;
-
-  private ActivityDisplay<IsWidget> wrapperDisplay;
-
   public WidgetActivityManager(WidgetActivityMapper mapper, EventBus eventBus) {
     super(mapper, eventBus);
   }
 
   public void setDisplay(AcceptsOneWidget display) {
-    // since ActivityManager holds a reference to passed display,
-    // make sure we return same ActivityDisplay for same AcceptsOneWidget
-    // NOTE: ActivityManager really doesn't care for instance eqaulity,
-    // all it cares is transitions to/from null, so possible simplification
-    // could be to provide new wrapper in each call 
-    if (display == null) {
-      wrapperDisplay = null;
-    } else if (display != widgetDisplay) {
-      widgetDisplay = display;
-      wrapperDisplay = display::setWidget;
-    }
-    super.setDisplay(wrapperDisplay);
+    super.setDisplay(display == null ? null : display::setWidget);
   }
 
 }
