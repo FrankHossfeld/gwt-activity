@@ -15,8 +15,6 @@
  */
 
 /**
- * Temporary port until proper dependency is not available as snapshot
- * 
- * FIXME: remove whole package
+ * Classes used to implement app navigation using elemental.
  */
-package org.gwtproject.user;
+package org.gwtproject.activity.elemental;

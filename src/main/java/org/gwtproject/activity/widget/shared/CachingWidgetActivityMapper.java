@@ -13,21 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.activity.shared;
+package org.gwtproject.activity.widget.shared;
 
+import org.gwtproject.activity.shared.CachingActivityMapper;
 import org.gwtproject.place.shared.Place;
+import org.gwtproject.user.client.ui.IsWidget;
 
 /**
- * Finds the activity to run for a given {@link Place}, used to configure
- * an {@link ActivityManager}.
- * 
- * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
+ * Drop-in replacement for {@link com.google.gwt.activity.shared.CachingActivityMapper}.
  */
-public interface ActivityMapper<V> {
-  /**
-   * Returns the activity to run for the given {@link Place}, or null.
-   *
-   * @param place a Place object
-   */
-  Activity<V> getActivity(Place place);
+public class CachingWidgetActivityMapper extends CachingActivityMapper<IsWidget>
+  implements WidgetActivityMapper {
+
+  public CachingWidgetActivityMapper(WidgetActivityMapper wrapped) {
+    super(wrapped);
+  }
+
+  @Override
+  public WidgetActivity getActivity(Place place) {
+    // we are wrapping WidgetActivityMapper, so it's safe to cast
+    return (WidgetActivity) super.getActivity(place);
+  }
+
 }

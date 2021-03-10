@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.activity.shared;
+package org.gwtproject.activity.widget.shared;
 
 import org.gwtproject.event.shared.Event;
 import org.gwtproject.event.shared.EventBus;
@@ -22,6 +22,7 @@ import org.gwtproject.event.shared.testing.CountingEventBus;
 import org.gwtproject.place.shared.Place;
 import org.gwtproject.place.shared.PlaceChangeEvent;
 import org.gwtproject.place.shared.PlaceChangeRequestEvent;
+import org.gwtproject.user.client.ui.AcceptsOneWidget;
 import org.gwtproject.user.client.ui.IsWidget;
 import org.gwtproject.user.client.ui.Widget;
 
@@ -30,20 +31,20 @@ import junit.framework.TestCase;
 /**
  * Eponymous unit test.
  */
-public class ActivityManagerTest extends TestCase {
+public class WidgetActivityManagerTest extends TestCase {
   private static class AsyncActivity extends SyncActivity {
     AsyncActivity(MyView view) {
       super(view);
     }
 
     @Override
-    public void start(ActivityDisplay<IsWidget> display, EventBus eventBus) {
+    public void start(AcceptsOneWidget display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
     }
 
     void finish() {
-      display.show(view);
+      display.setWidget(view);
     }
   }
 
@@ -64,11 +65,11 @@ public class ActivityManagerTest extends TestCase {
   private static class Handler {
   };
 
-  private static class MyDisplay implements ActivityDisplay<IsWidget> {
+  private static class MyDisplay implements AcceptsOneWidget {
     IsWidget view = null;
 
     @Override
-    public void show(IsWidget view) {
+    public void setWidget(IsWidget view) {
       this.view = view;
     }
   }
@@ -82,10 +83,10 @@ public class ActivityManagerTest extends TestCase {
       return null;
     }
   }
-  private static class SyncActivity implements Activity<IsWidget> {
+  private static class SyncActivity implements WidgetActivity {
     boolean canceled = false;
     boolean stopped = false;
-    ActivityDisplay<IsWidget> display;
+    AcceptsOneWidget display;
     String stopWarning;
     MyView view;
     EventBus bus;
@@ -110,10 +111,10 @@ public class ActivityManagerTest extends TestCase {
     }
 
     @Override
-    public void start(ActivityDisplay<IsWidget> display, EventBus eventBus) {
+    public void start(AcceptsOneWidget display, EventBus eventBus) {
       this.display = display;
       this.bus = eventBus;
-      display.show(view);
+      display.setWidget(view);
     }
   }
 
@@ -125,9 +126,9 @@ public class ActivityManagerTest extends TestCase {
   private SyncActivity activity2 = new SyncActivity(new MyView());
 
   private final MyDisplay realDisplay = new MyDisplay();
-  private final ActivityMapper<IsWidget> myMap = new ActivityMapper<IsWidget>() {
+  private final WidgetActivityMapper myMap = new WidgetActivityMapper() {
     @Override
-    public Activity<IsWidget> getActivity(Place place) {
+    public WidgetActivity getActivity(Place place) {
       if (place.equals(place1)) {
         return activity1;
       }
@@ -141,16 +142,16 @@ public class ActivityManagerTest extends TestCase {
 
   private CountingEventBus eventBus = new CountingEventBus();
 
-  private ActivityManager<IsWidget> manager = new ActivityManager<>(
+  private WidgetActivityManager manager = new WidgetActivityManager(
       myMap, eventBus);
 
   public void testActiveEventBus() {
     final AsyncActivity asyncActivity1 = new AsyncActivity(new MyView());
     final AsyncActivity asyncActivity2 = new AsyncActivity(new MyView());
 
-    ActivityMapper<IsWidget> map = new ActivityMapper<IsWidget>() {
+    WidgetActivityMapper map = new WidgetActivityMapper() {
       @Override
-      public Activity<IsWidget> getActivity(Place place) {
+      public WidgetActivity getActivity(Place place) {
         if (place.equals(place1)) {
           return asyncActivity1;
         }
@@ -162,7 +163,7 @@ public class ActivityManagerTest extends TestCase {
       }
     };
 
-    manager = new ActivityManager<>(map, eventBus);
+    manager = new WidgetActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
 
     eventBus.fireEvent(new PlaceChangeEvent(place1));
@@ -179,9 +180,9 @@ public class ActivityManagerTest extends TestCase {
     final AsyncActivity asyncActivity1 = new AsyncActivity(new MyView());
     final AsyncActivity asyncActivity2 = new AsyncActivity(new MyView());
 
-    ActivityMapper<IsWidget> map = new ActivityMapper<IsWidget>() {
+    WidgetActivityMapper map = new WidgetActivityMapper() {
       @Override
-      public Activity<IsWidget> getActivity(Place place) {
+      public WidgetActivity getActivity(Place place) {
         if (place.equals(place1)) {
           return asyncActivity1;
         }
@@ -193,7 +194,7 @@ public class ActivityManagerTest extends TestCase {
       }
     };
 
-    manager = new ActivityManager<>(map, eventBus);
+    manager = new WidgetActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
 
     PlaceChangeRequestEvent event = new PlaceChangeRequestEvent(place1);
@@ -241,9 +242,9 @@ public class ActivityManagerTest extends TestCase {
     final AsyncActivity asyncActivity1 = new AsyncActivity(new MyView());
     final AsyncActivity ayncActivity2 = new AsyncActivity(new MyView());
 
-    ActivityMapper<IsWidget> map = new ActivityMapper<IsWidget>() {
+    WidgetActivityMapper map = new WidgetActivityMapper() {
       @Override
-      public Activity<IsWidget> getActivity(Place place) {
+      public WidgetActivity getActivity(Place place) {
         if (place.equals(place1)) {
           return asyncActivity1;
         }
@@ -255,7 +256,7 @@ public class ActivityManagerTest extends TestCase {
       }
     };
 
-    manager = new ActivityManager<>(map, eventBus);
+    manager = new WidgetActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
 
     PlaceChangeRequestEvent event = new PlaceChangeRequestEvent(
@@ -302,7 +303,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(ActivityDisplay<IsWidget> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -345,7 +346,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStartAndCancel() {
     activity1 = new AsyncActivity(null) {
       @Override
-      public void start(ActivityDisplay<IsWidget> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -359,7 +360,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(ActivityDisplay<IsWidget> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -392,7 +393,7 @@ public class ActivityManagerTest extends TestCase {
   public void testExceptionsOnStopAndStart() {
     activity1 = new SyncActivity(null) {
       @Override
-      public void start(ActivityDisplay<IsWidget> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         bus.addHandler(MyEvent.TYPE, new Handler());
       }
@@ -406,7 +407,7 @@ public class ActivityManagerTest extends TestCase {
 
     activity2 = new SyncActivity(null) {
       @Override
-      public void start(ActivityDisplay<IsWidget> panel, EventBus eventBus) {
+      public void start(AcceptsOneWidget panel, EventBus eventBus) {
         super.start(panel, eventBus);
         throw new UnsupportedOperationException("Exception on start");
       }
@@ -462,9 +463,9 @@ public class ActivityManagerTest extends TestCase {
     final AsyncActivity asyncActivity1 = new AsyncActivity(new MyView());
     final AsyncActivity asyncActivity2 = new AsyncActivity(new MyView());
 
-    ActivityMapper<IsWidget> map = new ActivityMapper<IsWidget>() {
+    WidgetActivityMapper map = new WidgetActivityMapper() {
       @Override
-      public Activity<IsWidget> getActivity(Place place) {
+      public WidgetActivity getActivity(Place place) {
         if (place.equals(place1)) {
           return asyncActivity1;
         }
@@ -476,7 +477,7 @@ public class ActivityManagerTest extends TestCase {
       }
     };
 
-    manager = new ActivityManager<>(map, eventBus);
+    manager = new WidgetActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
     
     // Start an activity
@@ -555,23 +556,23 @@ public class ActivityManagerTest extends TestCase {
       }
       
       void secondView() {
-        display.show(view2);
+        display.setWidget(view2);
       }
       
       void firstView() {
-        display.show(view);
+        display.setWidget(view);
       }
     }
     final TwoViewActivity activity = new TwoViewActivity(new MyView(), new MyView());
     
-    ActivityMapper<IsWidget> map = new ActivityMapper<IsWidget>() {
+    WidgetActivityMapper map = new WidgetActivityMapper() {
       @Override
-      public Activity<IsWidget> getActivity(Place place) {
+      public WidgetActivity getActivity(Place place) {
         return activity;
       }
     };
 
-    manager = new ActivityManager<>(map, eventBus);
+    manager = new WidgetActivityManager(map, eventBus);
     manager.setDisplay(realDisplay);
     
     // Start an activity

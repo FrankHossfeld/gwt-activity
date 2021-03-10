@@ -13,23 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.activity.shared;
+package org.gwtproject.activity.widget.shared;
+
+import org.gwtproject.activity.shared.AbstractActivity;
+import org.gwtproject.user.client.ui.IsWidget;
 
 /**
- * Simple Activity implementation that is always willing to stop, and does
- * nothing onStop and onCancel.
- * 
- * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
+ * Drop-in replacement for {@link com.google.gwt.activity.shared.AbstractActivity}.
  */
-public abstract class AbstractActivity<V> implements Activity<V> {
+public abstract class AbstractWidgetActivity extends AbstractActivity<IsWidget>
+  implements WidgetActivity {
 
-  public String mayStop() {
-    return null;
-  }
-
-  public void onCancel() {
-  }
-
-  public void onStop() {
-  }
 }

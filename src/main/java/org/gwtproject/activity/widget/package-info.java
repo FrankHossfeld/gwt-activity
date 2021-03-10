@@ -13,23 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.activity.shared;
 
 /**
- * Simple Activity implementation that is always willing to stop, and does
- * nothing onStop and onCancel.
- * 
- * @param <V> view type ({@code IsWidget}, {@code HTMLElement}, ...)
+ * Classes used to implement app navigation using widgets.
  */
-public abstract class AbstractActivity<V> implements Activity<V> {
-
-  public String mayStop() {
-    return null;
-  }
-
-  public void onCancel() {
-  }
-
-  public void onStop() {
-  }
-}
+package org.gwtproject.activity.widget;

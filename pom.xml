@@ -48,7 +48,7 @@
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
 
     <java.release>1.8</java.release>
-    <gwt.version>2.8.2</gwt.version>
+    <gwt.version>2.9.0</gwt.version>
   </properties>
 
   <dependencies>
@@ -66,6 +66,20 @@
       <version>HEAD-SNAPSHOT</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-dom</artifactId>
+      <version>1.1.0</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtproject.widgets</groupId>
+      <artifactId>gwt-widgets</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <optional>true</optional>
+    </dependency>
+	
     <!-- Testing -->
     <dependency>
       <groupId>junit</groupId>
@@ -177,6 +191,7 @@
         <configuration>
           <includes>
             <include>org/gwtproject/activity/ActivityJreSuite.java</include>
+            <include>org/gwtproject/activity/widget/WidgetActivityJreSuite.java</include>
           </includes>
         </configuration>
       </plugin>
