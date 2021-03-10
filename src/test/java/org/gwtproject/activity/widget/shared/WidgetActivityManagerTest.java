@@ -337,7 +337,7 @@ public class WidgetActivityManagerTest extends TestCase {
     assertEquals(1, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
     assertEquals(1, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
 
-    manager.setDisplay((AcceptsOneWidget) null);
+    manager.setDisplay(null);
 
     assertEquals(0, eventBus.getHandlerCount(PlaceChangeEvent.TYPE));
     assertEquals(0, eventBus.getHandlerCount(PlaceChangeRequestEvent.TYPE));
@@ -450,7 +450,7 @@ public class WidgetActivityManagerTest extends TestCase {
      * Now we're going to place2. During PlaceChangeEvent dispatch, 
      * someone kills the manager's display.
      */
-    manager.setDisplay((AcceptsOneWidget) null);
+    manager.setDisplay(null);
     
     // Now the place change event reaches the manager
     manager.onPlaceChange(new PlaceChangeEvent(place2));
@@ -484,7 +484,7 @@ public class WidgetActivityManagerTest extends TestCase {
     manager.onPlaceChange(new PlaceChangeEvent(place1));
 
     // Kill the manager
-    manager.setDisplay((AcceptsOneWidget) null);
+    manager.setDisplay(null);
     
     // The activity is ready to play
     asyncActivity1.finish();
