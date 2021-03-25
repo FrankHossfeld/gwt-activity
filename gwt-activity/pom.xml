@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.gwtproject.activity</groupId>
+    <artifactId>gwt-activity-parent</artifactId>
+    <version>dev</version>
+  </parent>
+  <artifactId>gwt-activity</artifactId>
+  <version>${revision}</version>
+  <packaging>gwt-lib</packaging>
+
+  <name>GWT Activity</name>
+  <description>A j2cl ready implementation of the GWT Activity Module ready to use with GWT 2 and J2CL / GWT 3.</description>
+  <url>https://github.com/gwtproject/gwt-activity</url>
+
+  <organization>
+    <name>The GWT Project Authors</name>
+    <url>https://github.com/gwtproject</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>The GWT Project Authors</name>
+      <organization>The GWT Project Authors</organization>
+      <url>https://github.com/gwtproject</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/gwtproject/gwt-activity.git</connection>
+    <developerConnection>scm:git:ssh://github.com/gwtproject/gwt-activity.git</developerConnection>
+    <url>https://github.com/gwtproject/gwt-activity/tree/master</url>
+  </scm>
+
+  <inceptionYear>2018</inceptionYear>
+
+  <properties>
+    <maven.gwt.plugin>1.0.0</maven.gwt.plugin>
+
+    <gwt-event.version>1.0.0-RC1</gwt-event.version>
+    <gwt-places.version>HEAD-SNAPSHOT</gwt-places.version>
+    <gwt-widgets.version>1.0-SNAPSHOT</gwt-widgets.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.gwtproject.event</groupId>
+      <artifactId>gwt-event</artifactId>
+      <version>${gwt-event.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtproject.place</groupId>
+      <artifactId>gwt-places</artifactId>
+      <version>${gwt-places.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtproject.widgets</groupId>
+      <artifactId>gwt-widgets</artifactId>
+      <version>${gwt-widgets.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.ltgt.gwt.maven</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>${maven.gwt.plugin}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <moduleName>org.gwtproject.activity.Activity</moduleName>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- release profile to create sources, javadoc, and sign all artifacts before uploading -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven.source.plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven.javadoc.plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- see http://central.sonatype.org/pages/working-with-pgp-signatures.html for more detail -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven.gpg.plugin}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <repositories>
+    <repository>
+      <id>vertispan-jre</id>
+      <name>Vertispan Public Repo</name>
+      <url>https://repo.vertispan.com/j2cl/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>vertispan</id>
+      <name>Vertispan Public Repo</name>
+      <url>https://repo.vertispan.com/gwt-snapshot/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+    <repository>
+      <id>google-snapshots</id>
+      <name>Google Snapshots Repo</name>
+      <url>https://oss.sonatype.org/content/repositories/google-snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>sonatype-public</id>
+      <name>Sonatype Public Snapshots Repo</name>
+      <url>https://oss.sonatype.org/content/repositories/public</url>
+    </repository>
+  </repositories>
+</project>
