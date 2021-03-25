@@ -438,7 +438,7 @@ public class ActivityManagerTest extends TestCase {
   }
   
   /**
-   * @see http://code.google.com/p/google-web-toolkit/issues/detail?id=5375
+   * @link http://code.google.com/p/google-web-toolkit/issues/detail?id=5375
    */
   public void testNullDisplayOnPlaceChange() {
     manager.setDisplay(realDisplay);
@@ -544,7 +544,7 @@ public class ActivityManagerTest extends TestCase {
   }
   
   /**
-   * Non-regression test: make sure an activity can call {@link Consumer<Activity.View>#accept(IsWidget)} several times to switch views.
+   * Non-regression test: make sure an activity can call {@see Consumer<Activity.View>#accept(IsWidget)} several times to switch views.
    */
   public void testacceptSeveralTimesPerActivity() {
     class TwoViewActivity extends SyncActivity {
