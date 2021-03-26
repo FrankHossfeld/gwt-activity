@@ -18,8 +18,8 @@ package org.gwtproject.activity.shared;
 import org.gwtproject.place.shared.Place;
 
 /**
- * Finds the activity to run for a given {@link Place}, used to configure
- * an {@link ActivityManager}.
+ * Finds the activity to run for a given {@link Place}, used to configure an {@link
+ * ActivityManager}.
  */
 public interface ActivityMapper {
   /**

@@ -17,15 +17,10 @@ package org.gwtproject.activity.shared;
 
 import org.gwtproject.place.shared.Place;
 
-/**
- * Wraps an activity mapper and applies a filter to the place objects that it
- * sees.
- */
+/** Wraps an activity mapper and applies a filter to the place objects that it sees. */
 public class FilteredActivityMapper implements ActivityMapper {
 
-  /**
-   * Implemented by objects that want to interpret one place as another.
-   */
+  /** Implemented by objects that want to interpret one place as another. */
   public interface Filter {
     /**
      * Returns the filtered interpretation of the given {@link Place}.

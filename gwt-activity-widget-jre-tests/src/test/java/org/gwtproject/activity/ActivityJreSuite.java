@@ -19,12 +19,7 @@ import org.gwtproject.activity.shared.ActivityManagerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * Tests of the activity package.
- */
+/** Tests of the activity package. */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-  ActivityManagerTest.class
-})
-public class ActivityJreSuite {
-}
+@Suite.SuiteClasses({ActivityManagerTest.class})
+public class ActivityJreSuite {}

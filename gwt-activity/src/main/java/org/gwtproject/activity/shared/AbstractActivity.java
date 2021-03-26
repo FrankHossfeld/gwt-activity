@@ -16,8 +16,8 @@
 package org.gwtproject.activity.shared;
 
 /**
- * Simple Activity implementation that is always willing to stop, and does
- * nothing onStop and onCancel.
+ * Simple Activity implementation that is always willing to stop, and does nothing onStop and
+ * onCancel.
  */
 public abstract class AbstractActivity implements Activity {
 
@@ -25,9 +25,7 @@ public abstract class AbstractActivity implements Activity {
     return null;
   }
 
-  public void onCancel() {
-  }
+  public void onCancel() {}
 
-  public void onStop() {
-  }
+  public void onStop() {}
 }

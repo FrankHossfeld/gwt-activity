@@ -45,7 +45,7 @@
     <modules>
         <module>gwt-activity</module>
         <module>gwt-activity-widget-jre-tests</module>
-<!--        <module>gwt-activity-widget-gwt2-tests</module>-->
+        <module>gwt-activity-widget-gwt2-tests</module>
 <!--        <module>gwt-activity-j2cl-tests</module>-->
     </modules>
 

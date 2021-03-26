@@ -18,8 +18,8 @@ package org.gwtproject.activity.shared;
 import org.gwtproject.place.shared.Place;
 
 /**
- * Wraps another {@link ActivityMapper} and caches the last activity it
- * returned, to be re-used if we see the same place twice.
+ * Wraps another {@link ActivityMapper} and caches the last activity it returned, to be re-used if
+ * we see the same place twice.
  */
 public class CachingActivityMapper implements ActivityMapper {
 

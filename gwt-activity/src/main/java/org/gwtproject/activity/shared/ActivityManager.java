@@ -15,6 +15,8 @@
  */
 package org.gwtproject.activity.shared;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.gwtproject.event.shared.EventBus;
 import org.gwtproject.event.shared.HandlerRegistration;
 import org.gwtproject.event.shared.ResettableEventBus;
@@ -24,19 +26,16 @@ import org.gwtproject.place.shared.PlaceChangeRequestEvent;
 import org.gwtproject.user.client.ui.AcceptsOneWidget;
 import org.gwtproject.user.client.ui.IsWidget;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
- * Manages {@link Activity} objects that should be kicked off in response to
- * {@link PlaceChangeEvent} events. Each activity can start itself
- * asynchronously, and provides a widget to be shown when it's ready to run.
+ * Manages {@link Activity} objects that should be kicked off in response to {@link
+ * PlaceChangeEvent} events. Each activity can start itself asynchronously, and provides a widget to
+ * be shown when it's ready to run.
  */
 public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler {
 
   /**
-   * Wraps our real display to prevent an Activity from taking it over if it is
-   * not the currentActivity.
+   * Wraps our real display to prevent an Activity from taking it over if it is not the
+   * currentActivity.
    */
   private class ProtectedDisplay implements AcceptsOneWidget {
     private final Activity activity;
@@ -53,10 +52,10 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     }
   }
 
-  private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-    public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    }
-  };
+  private static final Activity NULL_ACTIVITY =
+      new AbstractActivity() {
+        public void start(AcceptsOneWidget panel, EventBus eventBus) {}
+      };
 
   private final ActivityMapper mapper;
 
@@ -78,11 +77,9 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
   /**
    * Create an ActivityManager. Next call {@link #setDisplay}.
-   * 
-   * @param mapper finds the {@link Activity} for a given
-   *          {@link org.gwtproject.place.shared.Place}
-   * @param eventBus source of {@link PlaceChangeEvent} and
-   *          {@link PlaceChangeRequestEvent} events.
+   *
+   * @param mapper finds the {@link Activity} for a given {@link org.gwtproject.place.shared.Place}
+   * @param eventBus source of {@link PlaceChangeEvent} and {@link PlaceChangeRequestEvent} events.
    */
   public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
     this.mapper = mapper;
@@ -91,26 +88,24 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
   }
 
   /**
-  * Returns an event bus which is in use by the currently running activity.
-  * <p>
-  * Any handlers attached to the returned event bus will be de-registered when
-  * the current activity is stopped.
-  *
-  * @return the event bus used by the current activity
-  */
+   * Returns an event bus which is in use by the currently running activity.
+   *
+   * <p>Any handlers attached to the returned event bus will be de-registered when the current
+   * activity is stopped.
+   *
+   * @return the event bus used by the current activity
+   */
   public EventBus getActiveEventBus() {
     return stopperedEventBus;
   }
- 
+
   /**
-   * Deactivate the current activity, find the next one from our ActivityMapper,
-   * and start it.
-   * <p>
-   * The current activity's widget will be hidden immediately, which can cause
-   * flicker if the next activity provides its widget asynchronously. That can
-   * be minimized by decent caching. Perenially slow activities might mitigate
-   * this by providing a widget immediately, with some kind of "loading"
-   * treatment.
+   * Deactivate the current activity, find the next one from our ActivityMapper, and start it.
+   *
+   * <p>The current activity's widget will be hidden immediately, which can cause flicker if the
+   * next activity provides its widget asynchronously. That can be minimized by decent caching.
+   * Perenially slow activities might mitigate this by providing a widget immediately, with some
+   * kind of "loading" treatment.
    */
   public void onPlaceChange(PlaceChangeEvent event) {
     Activity nextActivity = getNextActivity(event);
@@ -171,22 +166,20 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
   /**
    * Reject the place change if the current activity is not willing to stop.
-   * 
-   * @see PlaceChangeRequestEvent.Handler#
-   *      onPlaceChangeRequest(PlaceChangeRequestEvent)
+   *
+   * @see PlaceChangeRequestEvent.Handler# onPlaceChangeRequest(PlaceChangeRequestEvent)
    */
   public void onPlaceChangeRequest(PlaceChangeRequestEvent event) {
     event.setWarning(currentActivity.mayStop());
   }
 
   /**
-   * Sets the display for the receiver, and has the side effect of starting or
-   * stopping its monitoring the event bus for place change events.
-   * <p>
-   * If you are disposing of an ActivityManager, it is important to call
-   * setDisplay(null) to get it to de-register from the event bus, so that it can
-   * be garbage collected.
-   * 
+   * Sets the display for the receiver, and has the side effect of starting or stopping its
+   * monitoring the event bus for place change events.
+   *
+   * <p>If you are disposing of an ActivityManager, it is important to call setDisplay(null) to get
+   * it to de-register from the event bus, so that it can be garbage collected.
+   *
    * @param display an instance of AcceptsOneWidget
    */
   public void setDisplay(AcceptsOneWidget display) {
@@ -257,12 +250,13 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
       final HandlerRegistration placeRequestReg =
           eventBus.addHandler(PlaceChangeRequestEvent.TYPE, this);
 
-      this.handlerRegistration = new HandlerRegistration() {
-        public void removeHandler() {
-          placeReg.removeHandler();
-          placeRequestReg.removeHandler();
-        }
-      };
+      this.handlerRegistration =
+          new HandlerRegistration() {
+            public void removeHandler() {
+              placeReg.removeHandler();
+              placeRequestReg.removeHandler();
+            }
+          };
     } else {
       if (handlerRegistration != null) {
         handlerRegistration.removeHandler();

@@ -12,7 +12,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>GWT Activity JRE Tests</name>
+    <name>GWT Activity JRE Widget Tests</name>
     <description>Test cases for the JRE widgets tests</description>
 
     <properties>
@@ -40,14 +40,14 @@
             <groupId>org.gwtproject.activity</groupId>
             <artifactId>gwt-activity</artifactId>
             <version>${revision}</version>
-<!--            <scope>test</scope>-->
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-<!--            <scope>test</scope>-->
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
