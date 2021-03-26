@@ -50,7 +50,7 @@
     <maven.gwt.plugin>1.0.0</maven.gwt.plugin>
 
     <gwt-event.version>1.0.0-RC1</gwt-event.version>
-    <gwt-places.version>HEAD-SNAPSHOT</gwt-places.version>
+    <gwt-places.version>1.0.0-RC1</gwt-places.version>
     <gwt-widgets.version>1.0-SNAPSHOT</gwt-widgets.version>
   </properties>
 
@@ -149,42 +149,15 @@
 
   <repositories>
     <repository>
-      <id>vertispan-jre</id>
-      <name>Vertispan Public Repo</name>
-      <url>https://repo.vertispan.com/j2cl/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>vertispan</id>
-      <name>Vertispan Public Repo</name>
+      <id>vertispan-gwt-snapshots</id>
+      <name>Vertispan GWT Snapshots</name>
       <url>https://repo.vertispan.com/gwt-snapshot/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>google-snapshots</id>
-      <name>Google Snapshots Repo</name>
-      <url>https://oss.sonatype.org/content/repositories/google-snapshots</url>
       <releases>
         <enabled>false</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>sonatype-public</id>
-      <name>Sonatype Public Snapshots Repo</name>
-      <url>https://oss.sonatype.org/content/repositories/public</url>
     </repository>
   </repositories>
 </project>

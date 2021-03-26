@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gwtproject.activity.example.simple.client.home;
+package org.gwtproject.activity.example.simple.client;
 
-import org.gwtproject.activity.shared.AbstractActivity;
-import org.gwtproject.activity.shared.Activity;
-import org.gwtproject.event.shared.EventBus;
-import org.gwtproject.user.client.ui.AcceptsOneWidget;
+import org.gwtproject.activity.example.simple.client.about.AboutPlace;
+import org.gwtproject.activity.example.simple.client.home.HomePlace;
+import org.gwtproject.place.shared.PlaceHistoryMapper;
+import org.gwtproject.place.shared.WithTokenizers;
 
-import org.gwtproject.user.client.ui.Label;
-
-public class HomeActivity extends AbstractActivity implements Activity {
-
-  @Override
-  public void start(AcceptsOneWidget panel, EventBus eventBus) {
-    Label label = new Label("Home (redirecting to About)");
-    
-    panel.setWidget(label::asWidget); // temporary workaround
-  }
+@WithTokenizers({ HomePlace.Tokenizer.class, AboutPlace.Tokenizer.class })
+public interface SimplePlaceHistoryMapper extends PlaceHistoryMapper {
 
 }

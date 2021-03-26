@@ -10,3 +10,6 @@
 war/gwt_bree/
 gwt-unitCache/
 /gwt-activity-widget-gwt2-tests/src/it/simple/build.log
+/gwt-activity-widget-gwt2-tests/src/it/simple/target/
+/gwt-activity-widget-j2cl-tests/src/it/simple/build.log
+/gwt-activity-widget-j2cl-tests/src/it/simple/target/

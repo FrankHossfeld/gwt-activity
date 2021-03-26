@@ -26,28 +26,28 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.google.gwt</groupId>
-        <artifactId>gwt</artifactId>
-        <version>${gwt.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+<!--TODO: remove GWT dependencies-->
+<!--  <dependencyManagement>-->
+<!--    <dependencies>-->
+<!--      <dependency>-->
+<!--        <groupId>com.google.gwt</groupId>-->
+<!--        <artifactId>gwt</artifactId>-->
+<!--        <version>${gwt.version}</version>-->
+<!--        <type>pom</type>-->
+<!--        <scope>import</scope>-->
+<!--      </dependency>-->
+<!--    </dependencies>-->
+<!--  </dependencyManagement>-->
 
   <dependencies>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.google.gwt</groupId>-->
+<!--      <artifactId>gwt-user</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>com.google.gwt</groupId>-->
+<!--      <artifactId>gwt-dev</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>org.gwtproject.timer</groupId>
